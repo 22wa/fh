@@ -4,7 +4,7 @@ function build_url(){
         document.getElementById("b_url").innerHTML=`输入的不是链接或者未加http请求头！`;
     }
     else {
-        url = "https://softfabu.github.io/fanghong/" + "api/?url=" + url;
+        url = "https://22s.github.io/fh/" + "api/?url=" + url;
         document.getElementById("b_url").innerHTML=`<a href=${url} target='_blank'>${url}</a>`;
     }
 }
