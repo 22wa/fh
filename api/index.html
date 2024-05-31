@@ -1,61 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
-    <title>精彩马上来...</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+  <title>精彩马上来...</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+
+    #tips {
+      font-size: 25px;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    #mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 9999;
+    }
+
+    #mask .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      font-size: 30px; /* 自定义提示字体大小 */
+    }
+  </style>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <div id="tips" style="font-size:25px;text-align: center;line-height: 50px;"></div>
-    <script>
+  <div id="tips"></div>
+  <div id="mask">
+    <div class="content">
+      <h1> 😍客官别急嘛😍 <br><br>为了给您更好的体验 <br><br>请点击右上角 •••<br>在浏览器中打开链接</h1>
+    </div>
+  </div>
+
+  <script>
     var url = document.location.toString();
     var urlParmStr = url.slice(url.indexOf('=') + 1);
     var ua = navigator.userAgent.toLowerCase();
-    var isQQ = ua.indexOf(' qq/') != -1 && ua.indexOf('mqqbrowser') == -1;
-    var isQQBrowser = ua.indexOf('mqqbrowser') != -1;
-    var isWeixin = ua.indexOf('micromessenger') != -1;
-    var isAndroid = ua.indexOf('android') != -1;
-    var isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
+    var isQQ = ua.indexOf(' qq/') !== -1 && ua.indexOf('mqqbrowser') === -1;
+    var isQQBrowser = ua.indexOf('mqqbrowser') !== -1;
+    var isWeixin = ua.indexOf('micromessenger') !== -1;
+    var isAndroid = ua.indexOf('android') !== -1;
+    var isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
 
-    var notice_openBrowser = "<h2>请点击右上角，通过浏览器打开本页面。</br></br></br>【注意，请勿使用QQ浏览器打开！！】</h2>"
+    var notice_openBrowser = "<h2>请点击右上角，通过浏览器打开本页面。</br></br></br>【注意，请勿使用QQ浏览器打开！！】</h2>";
 
     function openWithQQBrowser(url) {
-        var iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = 'mqqbrowser://url=' + encodeURIComponent(url);
-        document.body.appendChild(iframe);
+      var iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = 'mqqbrowser://url=' + encodeURIComponent(url);
+      document.body.appendChild(iframe);
 
-        setTimeout(function () {
-            document.body.removeChild(iframe);
-            if (document.visibilityState !== 'hidden') {
-                // 如果页面仍然可见，显示提示信息
-                document.getElementById("tips").innerHTML = notice_openBrowser;
-            }
-        }, 2000);
+      setTimeout(function () {
+        document.body.removeChild(iframe);
+        if (document.visibilityState !== 'hidden') {
+          // 如果页面仍然可见，显示提示信息
+          document.getElementById("tips").innerHTML = notice_openBrowser;
+        }
+      }, 2000);
     }
 
     // 判断是不是在微信客户端或手机QQ中打开
     if (isWeixin) {
-        if (isAndroid || isIos) {
-            document.getElementById("tips").innerHTML = notice_openBrowser;
-        } else {
-            document.getElementById("tips").innerHTML = notice_openBrowser;
-        }
-    } else if (isQQ) {
-        openWithQQBrowser(urlParmStr);
-    } else if (isQQBrowser) {
+      if (isAndroid || isIos) {
         document.getElementById("tips").innerHTML = notice_openBrowser;
+      } else {
+        document.getElementById("tips").innerHTML = notice_openBrowser;
+      }
+    } else if (isQQ) {
+      openWithQQBrowser(urlParmStr);
+    } else if (isQQBrowser) {
+      document.getElementById("tips").innerHTML = notice_openBrowser;
     } else {
-        // 不是微信或手机QQ客户端，直接可以访问链接
-        if (urlParmStr == url) {
-            urlParmStr = "https://www.qian.blue";
-        }
-        console.log(urlParmStr);
-        location.href = urlParmStr;
+      // 不是微信或手机QQ客户端，直接可以访问链接
+      if (urlParmStr === url) {
+        urlParmStr = "https://www.qian.blue";
+      }
+      console.log(urlParmStr);
+      location.href = urlParmStr;
     }
-    </script>
-    <script async type="text/javascript" src="https://js.users.51.la/21480329.js"></script>
-    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-    <script>LA.init({id: "JsTawo0DkJhtEmv4",ck: "JsTawo0DkJhtEmv4"})</script>
+  </script>
+  <script async type="text/javascript" src="https://js.users.51.la/21480329.js"></script>
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id: "JsTawo0DkJhtEmv4",ck: "JsTawo0DkJhtEmv4"})</script>
 </body>
 </html>
