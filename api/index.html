@@ -2,8 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
-  <title>精彩马上来...</title>
+  <title>点击右上角•••在浏览器打开</title>
   <style>
     html, body {
       height: 100%;
@@ -15,14 +14,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-
-    #tips {
-      font-size: 25px;
-      text-align: center;
-      line-height: 50px;
+      background-image: url('https://tc.you8.xyz/img/3');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
     }
 
     #mask {
@@ -38,7 +33,7 @@
 
     #mask .content {
       position: absolute;
-      top: 50%;
+      top: 20%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
@@ -49,7 +44,6 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-  <div id="tips"></div>
   <div id="mask">
     <div class="content">
       <h1> 😍客官别急嘛😍 <br><br>为了给您更好的体验 <br><br>请点击右上角 •••<br>在浏览器中打开链接</h1>
@@ -57,65 +51,32 @@
   </div>
 
   <script>
-    function isWeChat() {
+    function isWeChatOrQQ() {
       var userAgent = navigator.userAgent.toLowerCase();
-      return userAgent.indexOf("micromessenger") !== -1;
+      return userAgent.indexOf("micromessenger") !== -1 || userAgent.indexOf("qq/") !== -1;
     }
 
-    function isQQ() {
-      var userAgent = navigator.userAgent.toLowerCase();
-      return userAgent.indexOf(' qq/') !== -1 && userAgent.indexOf('mqqbrowser') === -1;
+    function getQueryParam(param) {
+      var urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
     }
 
-    function isQQBrowser() {
-      var userAgent = navigator.userAgent.toLowerCase();
-      return userAgent.indexOf('mqqbrowser') !== -1;
-    }
-
-    function openWithQQBrowser(url) {
-      var iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = 'mqqbrowser://url=' + encodeURIComponent(url);
-      document.body.appendChild(iframe);
-
-      setTimeout(function () {
-        document.body.removeChild(iframe);
-        if (document.visibilityState !== 'hidden') {
-          // 如果页面仍然可见，显示提示信息
-          document.getElementById("tips").innerHTML = notice_openBrowser;
-        }
-      }, 2000);
-    }
-
-    var url = document.location.toString();
-    var urlParmStr = url.slice(url.indexOf('=') + 1);
-    var ua = navigator.userAgent.toLowerCase();
-    var isAndroid = ua.indexOf('android') !== -1;
-    var isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
-    var notice_openBrowser = "<h2>请点击右上角，通过浏览器打开本页面。</br></br></br>【注意，请勿使用QQ浏览器打开！！】</h2>";
-
-    // 判断是不是在微信客户端或手机QQ中打开
-    if (isWeChat()) {
-      if (isAndroid || isIos) {
-        document.getElementById("tips").innerHTML = notice_openBrowser;
+    function redirectToExternalBrowser() {
+      if (isWeChatOrQQ()) {
+        $("#mask").show();
       } else {
-        document.getElementById("tips").innerHTML = notice_openBrowser;
+        var targetUrl = getQueryParam('url');
+        if (targetUrl) {
+          window.location.href = targetUrl;
+        } else {
+          console.error("URL 参数缺失");
+        }
       }
-    } else if (isQQ()) {
-      openWithQQBrowser(urlParmStr);
-    } else if (isQQBrowser()) {
-      document.getElementById("tips").innerHTML = notice_openBrowser;
-    } else {
-      // 不是微信或手机QQ客户端，直接可以访问链接
-      if (urlParmStr === url) {
-        urlParmStr = "https://www.qian.blue";
-      }
-      console.log(urlParmStr);
-      location.href = urlParmStr;
     }
+
+    $(document).ready(function() {
+      redirectToExternalBrowser();
+    });
   </script>
-  <script async type="text/javascript" src="https://js.users.51.la/21480329.js"></script>
-  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-  <script>LA.init({id: "JsTawo0DkJhtEmv4",ck: "JsTawo0DkJhtEmv4"})</script>
 </body>
 </html>
