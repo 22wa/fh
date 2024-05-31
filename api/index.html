@@ -16,13 +16,29 @@
     var isAndroid = ua.indexOf('android') != -1;
     var isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
 
-    var notice_openBrowser = "<h2>请点击右上角，通过浏览器打开本页面。</br></br></br>【注意，.请勿使用QQ浏览器打开！！】</h2>"
+    var notice_openBrowser = "<h2>请点击右上角，通过浏览器打开本页面。</br></br></br>【注意，q请勿使用QQ浏览器打开！！】</h2>"
 
     function openWithQQBrowser(url) {
         var iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = 'mqqbrowser://url=' + encodeURIComponent(url);
         document.body.appendChild(iframe);
+    }
+
+    function isQQBrowserSupported() {
+        // 检测是否支持通过mqqbrowser协议打开QQ浏览器
+        return new Promise(function(resolve, reject) {
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.onload = resolve;
+            iframe.onerror = reject;
+            iframe.src = 'mqqbrowser://url=https://www.qq.com';
+            document.body.appendChild(iframe);
+            setTimeout(function() {
+                document.body.removeChild(iframe);
+                reject();
+            }, 2000);
+        });
     }
 
     // 判断是不是在微信客户端或手机QQ中打开
@@ -34,7 +50,12 @@
             document.getElementById("tips").innerHTML=notice_openBrowser;
         }
     } else if (isQQ) {
-        openWithQQBrowser(urlParmStr);
+        isQQBrowserSupported().then(function() {
+            openWithQQBrowser(urlParmStr);
+        }).catch(function() {
+            // 如果无法跳转到QQ浏览器，则提示用户手动打开
+            document.getElementById("tips").innerHTML = notice_openBrowser;
+        });
     } else {
         // 不是微信或手机QQ客户端，直接可以访问链接
         if (urlParmStr == url){
